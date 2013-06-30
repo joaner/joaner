@@ -15,9 +15,8 @@ autoload::init();
 new config('main');
 
 $request = new request();
-$request->run();
+$controller = $request->run();
 
-$controller = new $request->controller;
 $controller->run();
 
 $response = new response($controller);

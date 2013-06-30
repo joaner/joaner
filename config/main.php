@@ -2,7 +2,13 @@
 
 return array(
 	'request' => array(
-		'router' => 'pathinfo',
+		'router' => array(
+			'name' => 'path',
+			'default' => array(
+				'namespace' => '',
+				'controller' => 'index'
+			)
+		)
 	),
 
 	'database' => array(

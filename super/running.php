@@ -3,5 +3,5 @@ namespace super;
 
 interface running
 {
-	public function run();
+	static public function run();
 }

@@ -3,17 +3,20 @@ namespace core;
 
 use \core\config;
 
-final class request implements \super\running
+final class request implements \super\runner
 {
 	private $config;
+
 	private $router;
 	
 	
 	public function __construct()
 	{
 		$this->config = config::get('request');
-		
-		
+		if( isset($this->config['router']) ){
+			$router = '\\core\\router\\'. $this->config['router']['name'];
+			$this->router = new $router($this->config['router']);
+		}
 	}
 
 	/**
@@ -24,6 +27,10 @@ final class request implements \super\running
 	 */
 	public function run()
 	{
-		var_dump($_SERVER, $this->config);	
+		$this->router->run();
+		
+		$controller = new $this->router->controller($this->router->param);
+
+		return $controller;		
 	}
 }
