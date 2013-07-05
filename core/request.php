@@ -3,6 +3,8 @@ namespace core;
 
 use \core\config;
 
+use \core\request\router;
+
 final class request implements \super\runner
 {
 	private $config;
@@ -12,11 +14,8 @@ final class request implements \super\runner
 	
 	public function __construct()
 	{
-		$this->config = config::get('request');
-		if( isset($this->config['router']) ){
-			$router = '\\core\\router\\'. $this->config['router']['name'];
-			$this->router = new $router($this->config['router']);
-		}
+		router::init();
+		$this->router = router::getInstance();
 	}
 
 	/**

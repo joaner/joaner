@@ -1,27 +1,42 @@
 <?php
 
 return array(
-	'request' => array(
-		'router' => array(
-			'name' => 'path',
-			'default' => array(
-				'namespace' => '',
-				'controller' => 'index'
-			)
-		)
-	),
+	'core' => array(
+			
+		'request' => array(
+				'router' => array(
+						'default' => 'path',
+						'index' => array(
+								'namespace' => '',
+								'controller' => 'index'
+						)
 
-	'database' => array(
-		'driver' => 'mongo',
-		'connection' => array(
-			'mongo' => array(
-				'hostname'	=> 'localhost',
-				'port'		=> null,
-				'username'	=> null,
-				'password'	=> null,
-			)
+				)
+		),
+			
+		'cache' => array(
+			'default' => 'file',
 
-		)
+			'nodes' => array(
+				'file' => array(
+					'temp_dir' => sys_get_temp_dir()
+				),
+			)
+		),
+
+		'database' => array(
+			'default' => 'mongo',
+
+			'nodes' => array(
+				'mongo' => array(
+					'hostname'	=> 'localhost',
+					'port'		=> null,
+					'username'	=> null,
+					'password'	=> null,
+				)
+
+			)
+		),
+
 	)
-
 );

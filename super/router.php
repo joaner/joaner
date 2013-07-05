@@ -1,17 +1,12 @@
 <?php
 namespace super;
 
-use \core\config;
+use \core\request\router as routers;
+
 
 abstract class router implements \super\runner
 {
-	protected $config = array();
-
-	public function __construct($config=null)
-	{
-		$this->config = $config;
-	}
-
+	
 	abstract function run();
 
 
@@ -44,13 +39,13 @@ abstract class router implements \super\runner
 	public function getControllerClass($namespace, $controller)
 	{
 		if( $namespace === false ){
-			$namespace = $this->config['default']['namespace'];
+			$namespace = routers::$configure['index']['namespace'];
 		}elseif( is_array($namespace) ){
 			$namespace = '\\'. implode('\\', $namespace);
 		}
 
 		if( $controller === false ){
-			$controller = $this->config['default']['controller'];
+			$controller = routers::$configure['index']['controller'];
 		}
 
 		return "\\controller{$namespace}\\{$controller}";

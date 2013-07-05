@@ -8,16 +8,27 @@ use \core\request;
 use \core\response;
 use \core\config;
 
+use \core\exception\fileException;
+use \core\exception\paramException;
+
 
 require BASE_DIR. '/core/autoload.php';
 autoload::init();
 
-new config('main');
+try{
 
-$request = new request();
-$controller = $request->run();
+	new config('main.php');
 
-$controller->run();
+	$request = new request();
+	$controller = $request->run();
 
-$response = new response($controller);
-$response->run();
+	$controller->run();
+
+	$response = new response($controller);
+	$response->run();
+
+}catch(Exception $e){
+	echo $e;
+}catch(fileException $e){
+	echo $e;
+}
