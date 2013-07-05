@@ -1,9 +1,9 @@
 <?php
 namespace core;
 
-use \core\config;
-
 use \core\request\router;
+use \core\exception\requestException;
+
 
 final class request implements \super\runner
 {
@@ -14,7 +14,6 @@ final class request implements \super\runner
 	
 	public function __construct()
 	{
-		router::init();
 		$this->router = router::getInstance();
 	}
 
@@ -28,6 +27,9 @@ final class request implements \super\runner
 	{
 		$this->router->run();
 		
+		if( ! class_exists($this->router->controller) ){
+			throw new requestException();
+		}
 		$controller = new $this->router->controller($this->router->param);
 
 		return $controller;		

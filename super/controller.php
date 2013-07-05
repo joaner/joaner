@@ -15,7 +15,6 @@ abstract class controller implements \super\runner
 
 	public function __toString()
 	{
-		return "hello,world";
-		echo $this->view->display();
+		return ''; // $this->view->display();
 	}
 }

@@ -1,10 +1,20 @@
 <?php
 namespace controller;
 
+use \core\config;
+use \library\array2xml, \library\httpMime;
+
+
 final class index extends \super\controller
 {
 	public function run()
 	{
-		var_dump(get_included_files());
+		HttpMime::type('xml');
+		
+		$data = config::get();
+		$data = array('config'=>$data);
+		$convert = new array2xml($data);
+		$convert->set("\t");
+		$convert->run();
 	}
 }

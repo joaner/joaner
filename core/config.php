@@ -36,7 +36,7 @@ final class config
 	 * get configure content by name
 	 * @param string|int $name [, mixed $... ]
 	 */
-	public static function &get($name)
+	public static function &get()
 	{
 		$current = self::$config;
 		foreach(func_get_args() as $name){

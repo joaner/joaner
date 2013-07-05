@@ -23,6 +23,9 @@ abstract class nodes implements \super\factory
 
 	static public function getInstance($name=null)
 	{
+		if( is_null(static::$namespace) || empty(static::$configure) ){
+			static::init();
+		}
 		if( is_null($name) ){
 			$name = static::$configure['default'];
 		}
