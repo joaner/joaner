@@ -17,7 +17,7 @@ autoload::init();
 
 try{
 
-	new config('main.php');
+	new config('main.xml');
 
 	$request = new request();
 	$controller = $request->run();

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<core>
+		<request>
+			<router>
+				<default>path</default>
+				<index>
+					<namespace></namespace>
+					<controller>index</controller>
+				</index>
+			</router>
+		</request>
+		<cache>
+			<default>file</default>
+			<nodes>
+				<file>
+					<temp_dir>/tmp</temp_dir>
+				</file>
+			</nodes>
+		</cache>
+		<database>
+			<default>mongo</default>
+			<nodes>
+				<mongo>
+					<hostname>localhost</hostname>
+					<port></port>
+					<username></username>
+					<password></password>
+				</mongo>
+			</nodes>
+		</database>
+	</core>
+</config>

@@ -1,6 +1,11 @@
 <?php
 namespace core;
 
+use \core\cache;
+
+use \library\xml2array;
+
+
 final class config
 {
 	/**
@@ -25,8 +30,15 @@ final class config
 	public function __construct($name)
 	{
 		if( ! array_key_exists($name, self::$configs) ){
-			$file = BASE_DIR. "/config/{$name}";
-			self::$configs[$name] = include $file;
+			// $cache = cache::getInstance('file');
+			$key = __CLASS__.'::'.$name;
+			// $config = $cache->get($key);
+			//if( is_null($config) ){
+				$config = $this->read($name);
+			// 	$cache->set($key, $config);
+			//}
+
+			self::$configs[$name] = $config;
 		}
 		self::$config	=& self::$configs[$name];
 		self::$name		= $name;
@@ -44,6 +56,27 @@ final class config
 		}
 		
 		return $current;
+	}
+
+	private function read($name)
+	{
+		$ext = PATHINFO($name, PATHINFO_EXTENSION);
+		$file = BASE_DIR .'/config/'.$name;
+
+		switch($ext)
+		{
+			case 'php';
+				$config = include $file;
+			break;
+			case 'xml':
+				$content = file_get_contents($file);
+				$array = new xml2array($content);
+
+				$config = $array->get();
+			break;
+		}
+
+		return $config;
 	}
 	
 }
