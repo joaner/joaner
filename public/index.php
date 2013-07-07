@@ -1,6 +1,7 @@
 <?php
 
 define('BASE_DIR', realpath('..'));
+define('TEMP_DIR', sys_get_temp_dir());
 
 
 use \core\autoload;
@@ -14,6 +15,8 @@ use \core\exception\paramException;
 
 require BASE_DIR. '/core/autoload.php';
 autoload::init();
+
+config::init(TEMP_DIR);
 
 try{
 

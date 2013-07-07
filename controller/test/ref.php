@@ -1,7 +1,7 @@
 <?php
 namespace controller\test;
 
-use \library\reflection, \library\docComment;
+use \library\reflection, \library\parseDocComment;
 
 
 /**
@@ -14,7 +14,7 @@ final class ref extends \super\controller
 	public function run()
 	{
 		$ref = reflection::import($this);
-		$doc = new docComment($ref->getDocDocument());
+		$doc = new parseDocComment($ref->getDocDocument());
 		
 		$doc->get();
 	}

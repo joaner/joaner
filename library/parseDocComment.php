@@ -3,7 +3,7 @@ namespace library;
 
 use \Reflector;
 
-final class docComment
+final class parseDocComment
 {
 	private $docComment;
 	private $docs = array();

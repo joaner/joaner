@@ -3,16 +3,35 @@ namespace core;
 
 use \core\cache;
 
-use \library\xml2array;
-
+use \library\xml2array, \library\dataSerialize;
 
 final class config
 {
+	const cachefile = 'configs-cache.php';
+	
 	/**
 	 * all configure files content list
 	 * @var array
 	 */
 	private static $configs = array();
+	
+	/**
+	 * configs cache file create time
+	 * @var int
+	 */
+	private static $ctime;
+	
+	/**
+	 * cache file
+	 * @var string
+	 */
+	private static $cachefile;
+	
+	/**
+	 * need reset configs;
+	 * @var boolean
+	 */
+	private static $reset = false;
 	
 	/**
 	 * current configure type about self::$config
@@ -27,21 +46,30 @@ final class config
 	private static $config;
 	
 	
+	
+	
 	public function __construct($name)
 	{
-		if( ! array_key_exists($name, self::$configs) ){
-			// $cache = cache::getInstance('file');
-			$key = __CLASS__.'::'.$name;
-			// $config = $cache->get($key);
-			//if( is_null($config) ){
-				$config = $this->read($name);
-			// 	$cache->set($key, $config);
-			//}
-
-			self::$configs[$name] = $config;
+		$file = BASE_DIR .'/config/'.$name;
+		if( filectime($file) >= self::$ctime ){
+			self::$configs[$name] = $this->read($file);
+			self::$reset = true;
 		}
 		self::$config	=& self::$configs[$name];
 		self::$name		= $name;
+	}
+	
+	public static function init($dir=null)
+	{
+		is_null($dir) && $dir=sys_get_temp_dir();
+		self::$cachefile = $dir.'/'.self::cachefile;
+		self::$ctime = filectime(self::$cachefile);
+		
+		if( is_int(self::$ctime) ){
+			self::$configs = dataSerialize::import(self::$cachefile);
+		}else{
+			self::$reset = true;
+		}
 	}
 	
 	/**
@@ -58,10 +86,9 @@ final class config
 		return $current;
 	}
 
-	private function read($name)
+	private function read($file)
 	{
-		$ext = PATHINFO($name, PATHINFO_EXTENSION);
-		$file = BASE_DIR .'/config/'.$name;
+		$ext = PATHINFO($file, PATHINFO_EXTENSION);
 
 		switch($ext)
 		{
@@ -77,6 +104,14 @@ final class config
 		}
 
 		return $config;
+	}
+	
+	public function __destruct()
+	{
+		if( self::$reset === true ){
+			$content = dataSerialize::export(self::$configs);
+			file_put_contents(self::$cachefile, $content);
+		}
 	}
 	
 }
