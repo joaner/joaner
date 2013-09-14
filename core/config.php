@@ -7,7 +7,8 @@ use \library\xml2array, \library\dataSerialize;
 
 final class config
 {
-	const cachefile = 'configs-cache.php';
+	const default_file = 'main.xml';
+	const cache_header = 'configcache-';
 	
 	/**
 	 * all configure files content list
@@ -15,60 +16,27 @@ final class config
 	 */
 	private static $configs = array();
 	
-	/**
-	 * configs cache file create time
-	 * @var int
-	 */
-	private static $ctime;
 	
-	/**
-	 * cache file
-	 * @var string
-	 */
-	private static $cachefile;
-	
-	/**
-	 * need reset configs;
-	 * @var boolean
-	 */
-	private static $reset = false;
-	
-	/**
-	 * current configure type about self::$config
-	 * @var string
-	 */
-	private static $name;
-	
-	/**
-	 * one configure file content
-	 * @var array
-	 */
-	private static $config;
-	
-	
-	
-	
-	public function __construct($name)
+	public static function init($name=self::default_file, $dir=null)
 	{
-		$file = BASE_DIR .'/config/'.$name;
-		if( filectime($file) >= self::$ctime ){
-			self::$configs[$name] = $this->read($file);
-			self::$reset = true;
-		}
-		self::$config	=& self::$configs[$name];
-		self::$name		= $name;
+		self::loadConfig($name);
 	}
-	
-	public static function init($dir=null)
+
+	private static function loadConfig($name)
 	{
-		is_null($dir) && $dir=sys_get_temp_dir();
-		self::$cachefile = $dir.'/'.self::cachefile;
-		self::$ctime = filectime(self::$cachefile);
-		
-		if( is_int(self::$ctime) ){
-			self::$configs = dataSerialize::import(self::$cachefile);
+		$sourcefile 	= BASE_DIR .'/config/'.$name;
+		$cachefile 		= TEMP_DIR .'/'. self::cache_header . $name;
+		$ctime = @filectime($cachefile);
+		if( file_exists($cachefile) && 
+			WORK !== 'product' &&
+			$ctime = filectime($cachefile) && 
+			$ctime>filectime($sourcefile) ){
+			self::$configs = dataSerialize::import($cachefile);
 		}else{
-			self::$reset = true;
+			self::$configs = self::readConfig($sourcefile);
+			
+			$content = dataSerialize::export(self::$configs);
+			file_put_contents($cachefile, $content);
 		}
 	}
 	
@@ -78,7 +46,7 @@ final class config
 	 */
 	public static function &get()
 	{
-		$current = self::$config;
+		$current = self::$configs;
 		foreach(func_get_args() as $name){
 			$current = $current[$name];
 		}
@@ -86,8 +54,11 @@ final class config
 		return $current;
 	}
 
-	private function read($file)
+	private static function readConfig($file)
 	{
+		if( ! file_exists($file) ){
+			throw new fileException($file);
+		}
 		$ext = PATHINFO($file, PATHINFO_EXTENSION);
 
 		switch($ext)
@@ -104,14 +75,6 @@ final class config
 		}
 
 		return $config;
-	}
-	
-	public function __destruct()
-	{
-		if( self::$reset === true ){
-			$content = dataSerialize::export(self::$configs);
-			file_put_contents(self::$cachefile, $content);
-		}
 	}
 	
 }

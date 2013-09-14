@@ -1,8 +1,10 @@
 <?php
 
-define('BASE_DIR', realpath('..'));
+// define('BASE_DIR', realpath('..'));
+define('BASE_DIR', isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : realpath('..'));
 define('TEMP_DIR', sys_get_temp_dir());
 
+define('WORK', 'product');
 
 use \core\autoload;
 use \core\request;
@@ -16,11 +18,8 @@ use \core\exception\paramException;
 require BASE_DIR. '/core/autoload.php';
 autoload::init();
 
-config::init(TEMP_DIR);
-
 try{
-
-	new config('main.xml');
+	config::init('main.xml');
 
 	$request = new request();
 	$controller = $request->run();
