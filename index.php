@@ -1,0 +1,1 @@
+/home/xiaoai/public/xiaoai.me/public/index.php
